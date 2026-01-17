@@ -22,6 +22,7 @@ import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -54,6 +55,7 @@ export default defineConfig({
 		expressiveCode({
 			themes: [ expressiveCodeConfig.theme, expressiveCodeConfig.dark || expressiveCodeConfig.theme ],
 			plugins: [
+				pluginLanguageBadge(),
 				pluginCollapsibleSections(),
 				pluginLineNumbers(),
 				pluginCustomCopyButton(),
