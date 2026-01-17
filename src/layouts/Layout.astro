@@ -224,37 +224,6 @@ import { siteConfig } from '../config';
 // 	}
 // })();
 
-/* TODO This is a temporary solution for style flicker issue when the transition is activated */
-/* issue link: https://github.com/withastro/astro/issues/8711, the solution get from here too */
-/* update: fixed in Astro 3.2.4 */
-/*
-function disableAnimation() {
-	const css = document.createElement('style')
-	css.appendChild(
-		document.createTextNode(
-			`*{
-              -webkit-transition:none!important;
-              -moz-transition:none!important;
-              -o-transition:none!important;
-              -ms-transition:none!important;
-              transition:none!important
-              }`
-		)
-	)
-	document.head.appendChild(css)
-
-	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
-	}
-}
-*/
-
 const bannerEnabled = !!document.getElementById('banner-wrapper')
 
 function setClickOutsideToClose(panel: string, ignores: string[]) {
@@ -303,6 +272,49 @@ function initCustomScrollbar() {
 			autoHideDelay: 500,
 			autoHideSuspend: false,
 		},
+	});
+	const mathElements = Array.from(document.querySelectorAll('mjx-container')).filter(el => el.scrollWidth > el.clientWidth + 1);
+
+	const mathObserverOptions = {
+		root: null,
+		rootMargin: '100px',
+		threshold: 0.1
+	};
+
+	const processmathElement = (element: HTMLElement) => {
+		if (!element.parentNode) return;
+		if (element.hasAttribute('data-scrollbar-initialized')) return;
+
+		const container = document.createElement('div');
+		container.className = 'math-display-container';
+		container.setAttribute('aria-label', 'scrollable container for formulas');
+
+		element.parentNode.insertBefore(container, element);
+		container.appendChild(element);
+
+		OverlayScrollbars(container, {
+			scrollbars: {
+				theme: 'scrollbar-base scrollbar-auto',
+				autoHide: 'leave',
+				autoHideDelay: 500,
+				autoHideSuspend: false
+			}
+		});
+
+		element.setAttribute('data-scrollbar-initialized', 'true');
+	};
+
+	const mathObserver = new IntersectionObserver((entries, observer) => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+			processmathElement(entry.target as HTMLElement);
+			observer.unobserve(entry.target);
+			}
+		});
+	}, mathObserverOptions);
+
+	mathElements.forEach(element => {
+		mathObserver.observe(element);
 	});
 }
 

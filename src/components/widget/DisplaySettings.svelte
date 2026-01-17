@@ -6,13 +6,17 @@ import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
 
 let hue = getHue();
 const defaultHue = getDefaultHue();
+let hueTimer: ReturnType<typeof setTimeout> | null = null;
 
 function resetHue() {
 	hue = getDefaultHue();
 }
 
 $: if (hue || hue === 0) {
-	setHue(hue);
+	if (hueTimer) clearTimeout(hueTimer);
+	hueTimer = setTimeout(() => {
+		setHue(hue);
+	}, 50);
 }
 </script>
 
