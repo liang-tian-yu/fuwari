@@ -1,6 +1,5 @@
 exclude_selectors:
-  - "span.katex"
-  - "span.katex-display"
+  - "mjx-container"
   - "[data-pagefind-ignore]"
   - ".search-panel"
   - "#search-panel"

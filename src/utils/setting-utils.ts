@@ -48,13 +48,13 @@ export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
 				document.documentElement.classList.add("dark");
 				document.documentElement.setAttribute(
 					"data-theme",
-					expressiveCodeConfig.theme,
+					expressiveCodeConfig.dark || expressiveCodeConfig.theme,
 				);
 			} else {
 				document.documentElement.classList.remove("dark");
 				document.documentElement.setAttribute(
 					"data-theme",
-					expressiveCodeConfig.dark || expressiveCodeConfig.theme,
+					expressiveCodeConfig.theme,
 				);
 			}
 			break;
